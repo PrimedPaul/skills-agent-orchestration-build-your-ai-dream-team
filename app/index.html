@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="dashboard" aria-labelledby="page-title">
+      <header class="dashboard-header">
+        <p class="eyebrow">Contributor dashboard</p>
+        <h1 id="page-title">Project Pulse</h1>
+        <p>See the current health, ownership, and activity of active projects.</p>
+      </header>
+
+      <section class="projects-section" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <h2 id="projects-heading">Projects</h2>
+          <p id="loading-status" role="status" aria-live="polite">Loading project data…</p>
+        </div>
+
+        <div id="error-state" class="error-state" role="alert" aria-live="assertive" hidden>
+          <h2>Unable to load projects</h2>
+          <p id="error-message"></p>
+        </div>
+
+        <ul id="project-list" class="project-list" aria-live="polite" aria-busy="true"></ul>
+      </section>
+    </main>
+
+    <script>
+      "use strict";
+
+      const requiredProjectFields = [
+        "name",
+        "owner",
+        "status",
+        "recentActivity",
+        "priority"
+      ];
+
+      const projectList = document.getElementById("project-list");
+      const loadingStatus = document.getElementById("loading-status");
+      const errorState = document.getElementById("error-state");
+      const errorMessage = document.getElementById("error-message");
+
+      function isNonEmptyString(value) {
+        return typeof value === "string" && value.trim().length > 0;
+      }
+
+      function validateProjectData(payload) {
+        if (payload === null || typeof payload !== "object" || Array.isArray(payload)) {
+          throw new Error("The data response must be an object with a projects array.");
+        }
+
+        if (!Array.isArray(payload.projects)) {
+          throw new Error("The data response is missing its required projects array.");
+        }
+
+        if (payload.projects.length === 0) {
+          throw new Error("The projects array is empty, so there are no projects to display.");
+        }
+
+        payload.projects.forEach(function (project, index) {
+          if (project === null || typeof project !== "object" || Array.isArray(project)) {
+            throw new Error("Project " + (index + 1) + " must be an object.");
+          }
+
+          requiredProjectFields.forEach(function (fieldName) {
+            if (!isNonEmptyString(project[fieldName])) {
+              throw new Error(
+                "Project " + (index + 1) + " has an invalid or missing " + fieldName + " value."
+              );
+            }
+          });
+        });
+
+        return payload.projects;
+      }
+
+      function createProjectField(label, value, fieldClass) {
+        const field = document.createElement("div");
+        field.className = "project-field " + fieldClass;
+
+        const term = document.createElement("dt");
+        term.textContent = label;
+
+        const description = document.createElement("dd");
+        description.textContent = value;
+
+        field.append(term, description);
+        return field;
+      }
+
+      function createProjectCard(project) {
+        const listItem = document.createElement("li");
+        const card = document.createElement("article");
+        card.className = "project-card";
+        card.dataset.status = project.status;
+        card.dataset.priority = project.priority;
+
+        const heading = document.createElement("h3");
+        heading.className = "project-name";
+        heading.textContent = project.name;
+
+        const details = document.createElement("dl");
+        details.className = "project-details";
+        details.append(
+          createProjectField("Owner", project.owner, "project-owner"),
+          createProjectField("Status", project.status, "project-status"),
+          createProjectField("Recent activity", project.recentActivity, "project-activity"),
+          createProjectField("Priority", project.priority, "project-priority")
+        );
+
+        card.append(heading, details);
+        listItem.append(card);
+        return listItem;
+      }
+
+      function renderProjects(projects) {
+        const cards = document.createDocumentFragment();
+
+        projects.forEach(function (project) {
+          cards.append(createProjectCard(project));
+        });
+
+        projectList.replaceChildren(cards);
+      }
+
+      function showError(message) {
+        projectList.replaceChildren();
+        projectList.setAttribute("aria-busy", "false");
+        loadingStatus.textContent = "Project data could not be loaded.";
+        errorMessage.textContent = message;
+        errorState.hidden = false;
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("project-data.json");
+
+          if (!response.ok) {
+            throw new Error("The project data request failed with status " + response.status + ".");
+          }
+
+          let payload;
+          try {
+            payload = await response.json();
+          } catch (error) {
+            throw new Error("The project data file is not valid JSON.");
+          }
+
+          const projects = validateProjectData(payload);
+          renderProjects(projects);
+          projectList.setAttribute("aria-busy", "false");
+          loadingStatus.textContent =
+            "Loaded " + projects.length + (projects.length === 1 ? " project." : " projects.");
+        } catch (error) {
+          console.error("Project Pulse data load failed:", error);
+          showError(
+            error instanceof Error
+              ? error.message
+              : "An unexpected error prevented the project data from loading."
+          );
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>

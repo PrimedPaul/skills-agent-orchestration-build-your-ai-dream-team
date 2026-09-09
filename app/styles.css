@@ -1,0 +1,511 @@
+:root {
+  color-scheme: light;
+  --canvas: #eef3f8;
+  --surface: #ffffff;
+  --surface-muted: #f6f8fb;
+  --ink: #16263d;
+  --muted: #58677b;
+  --line: #d5dde8;
+  --brand: #2457a6;
+  --brand-dark: #173d78;
+  --focus: #0b6fd4;
+  --shadow-sm: 0 1px 2px rgb(20 38 61 / 8%);
+  --shadow-card: 0 9px 24px rgb(20 38 61 / 10%);
+  --radius-sm: 0.5rem;
+  --radius: 1rem;
+  --radius-lg: 1.35rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 20rem;
+  background: var(--canvas);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 20rem;
+  min-height: 100vh;
+  margin: 0;
+  overflow-wrap: anywhere;
+  background:
+    radial-gradient(circle at 88% -10%, #dbeafe 0, transparent 32rem),
+    linear-gradient(155deg, #f8fafc 0%, var(--canvas) 56%, #e6edf7 100%);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: var(--brand-dark);
+  text-underline-offset: 0.16em;
+}
+
+a:hover {
+  color: #102e5d;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.dashboard {
+  width: min(100% - 2rem, 76rem);
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem) 0 3rem;
+}
+
+/* The first direct section/header forms a calm, high-contrast dashboard masthead. */
+.dashboard > header,
+.dashboard > .intro,
+.dashboard > .dashboard-intro {
+  position: relative;
+  margin-bottom: clamp(1.5rem, 3vw, 2.4rem);
+  padding: clamp(1.35rem, 4vw, 2.5rem);
+  overflow: hidden;
+  border: 1px solid #cad7e7;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(125deg, #12386f, #2457a6 61%, #3677c7);
+  box-shadow: 0 14px 32px rgb(20 52 100 / 18%);
+  color: #fff;
+}
+
+.dashboard > header::after,
+.dashboard > .intro::after,
+.dashboard > .dashboard-intro::after {
+  position: absolute;
+  right: -3.5rem;
+  bottom: -6rem;
+  width: 15rem;
+  height: 15rem;
+  border: 2rem solid rgb(255 255 255 / 12%);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.dashboard h1 {
+  max-width: 16ch;
+  margin: 0;
+  color: inherit;
+  font-size: clamp(2rem, 7vw, 3.25rem);
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.dashboard > header p,
+.dashboard > .intro p,
+.dashboard > .dashboard-intro p {
+  max-width: 62ch;
+  margin: 0.8rem 0 0;
+  color: rgb(255 255 255 / 90%);
+}
+
+/* Header status: works for class-based markup and a semantic [role=status]. */
+.live-status,
+.dashboard-status,
+[role="status"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  margin-top: 1rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 999px;
+  background: rgb(8 28 59 / 24%);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.live-status::before,
+.dashboard-status::before {
+  width: 0.55rem;
+  height: 0.55rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #83e2aa;
+  box-shadow: 0 0 0 3px rgb(131 226 170 / 22%);
+  content: "";
+}
+
+main > section > h2,
+.dashboard h2 {
+  margin: 0 0 0.85rem;
+  color: var(--ink);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.project-grid,
+.project-collection,
+.project-list,
+.projects,
+[data-projects] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-card {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  gap: 1rem;
+  padding: 1.15rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-left: 0.35rem solid #8a9aae;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+
+.project-card:hover {
+  border-color: #b6c4d5;
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+}
+
+.project-card:focus-within {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgb(11 111 212 / 22%), var(--shadow-card);
+}
+
+.project-card > header,
+.project-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.project-name,
+.project-card h2,
+.project-card h3 {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.125rem;
+  letter-spacing: -0.015em;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.owner,
+.project-owner,
+[data-field="owner"] {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.owner::before,
+.project-owner::before {
+  color: #43566d;
+  content: "Owner: ";
+  font-weight: 700;
+}
+
+.project-card dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.project-card dl > div,
+.project-details > * {
+  min-width: 0;
+}
+
+.project-card dt,
+.field-label,
+.project-card .label {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #43566d;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.065em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.project-card dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.recent-activity,
+.project-activity,
+[data-field="recentActivity"],
+[data-field="activity"] {
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  color: #33465f;
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.recent-activity::before,
+.project-activity::before {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #43566d;
+  content: "Recent activity";
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+/* Labels retain their complete words; shape, border, and icon reinforce status beyond color. */
+.status,
+.project-status,
+.priority,
+.project-priority,
+[data-field="status"],
+[data-field="priority"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.34rem 0.55rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: #eef2f6;
+  color: #405268;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.status::before,
+.project-status::before,
+[data-field="status"]::before {
+  content: "●";
+  font-size: 0.65em;
+}
+
+.priority::before,
+.project-priority::before,
+[data-field="priority"]::before {
+  content: "!";
+  font-size: 0.85em;
+  font-weight: 900;
+}
+
+/* JS may supply either data attributes or normalized utility class names. */
+[data-status="On Track" i],
+.status-on-track,
+.on-track {
+  border-color: #187044;
+  background: #e8f6ed;
+  color: #125d38;
+}
+
+[data-status="At Risk" i],
+.status-at-risk,
+.at-risk {
+  border-color: #9a5c00;
+  background: #fff4d6;
+  color: #764600;
+}
+
+[data-status="Blocked" i],
+.status-blocked,
+.blocked {
+  border-color: #b12632;
+  background: #fdebed;
+  color: #8f1723;
+}
+
+[data-status="Planning" i],
+.status-planning,
+.planning {
+  border-color: #435db3;
+  background: #edf0ff;
+  color: #31478d;
+}
+
+[data-priority="Critical" i],
+.priority-critical,
+.critical {
+  border-color: #9d1624;
+  background: #ffe8eb;
+  color: #82111d;
+}
+
+[data-priority="High" i],
+.priority-high,
+.high {
+  border-color: #a34c00;
+  background: #fff0dc;
+  color: #7e3a00;
+}
+
+[data-priority="Medium" i],
+.priority-medium,
+.medium {
+  border-color: #806000;
+  background: #fff8d9;
+  color: #665000;
+}
+
+[data-priority="Low" i],
+.priority-low,
+.low {
+  border-color: #356c89;
+  background: #e7f5fb;
+  color: #20536f;
+}
+
+.project-card:has([data-status="At Risk" i]),
+.project-card:has(.status-at-risk),
+.project-card:has(.at-risk) {
+  border-left-color: #a76300;
+}
+
+.project-card:has([data-status="Blocked" i]),
+.project-card:has(.status-blocked),
+.project-card:has(.blocked) {
+  border-left-color: #b12632;
+}
+
+.project-card:has([data-priority="Critical" i]),
+.project-card:has(.priority-critical) {
+  border-top-color: #b12632;
+}
+
+.loading,
+.dashboard-loading,
+.error,
+.dashboard-error,
+[role="alert"] {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #b9c7d7;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  color: #2e425a;
+}
+
+.loading,
+.dashboard-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.loading::before,
+.dashboard-loading::before {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  border: 0.18rem solid #b7c7dc;
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: dashboard-spin 800ms linear infinite;
+  content: "";
+}
+
+.error,
+.dashboard-error,
+[role="alert"] {
+  border-color: #c64450;
+  border-left: 0.35rem solid #b12632;
+  background: #fff6f6;
+  color: #761a24;
+}
+
+@keyframes dashboard-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (min-width: 42rem) {
+  .project-grid,
+  .project-collection,
+  .project-list,
+  .projects,
+  [data-projects] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    padding: 1.35rem;
+  }
+
+  .project-card dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-card dl > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 68rem) {
+  .dashboard {
+    padding-bottom: 4rem;
+  }
+
+  .project-grid,
+  .project-collection,
+  .project-list,
+  .projects,
+  [data-projects] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

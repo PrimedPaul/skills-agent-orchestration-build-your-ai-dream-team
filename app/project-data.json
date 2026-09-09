@@ -1,0 +1,39 @@
+{
+  "projects": [
+    {
+      "name": "Customer Identity Refresh",
+      "owner": "Maya Chen",
+      "status": "On Track",
+      "recentActivity": "Single sign-on usability testing completed yesterday.",
+      "priority": "High"
+    },
+    {
+      "name": "Mobile Offline Mode",
+      "owner": "Jordan Patel",
+      "status": "At Risk",
+      "recentActivity": "Sync conflict defect is awaiting an Android platform fix.",
+      "priority": "Critical"
+    },
+    {
+      "name": "Data Retention Controls",
+      "owner": "Elena Rodriguez",
+      "status": "Blocked",
+      "recentActivity": "Waiting for legal approval of the regional retention policy.",
+      "priority": "High"
+    },
+    {
+      "name": "Partner Analytics Portal",
+      "owner": "Samira Okafor",
+      "status": "Planning",
+      "recentActivity": "Discovery interviews are scheduled with three launch partners.",
+      "priority": "Medium"
+    },
+    {
+      "name": "Knowledge Base Cleanup",
+      "owner": "Theo Martin",
+      "status": "On Track",
+      "recentActivity": "Archived 86 outdated articles during this week's content review.",
+      "priority": "Low"
+    }
+  ]
+}
